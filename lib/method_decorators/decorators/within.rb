@@ -7,6 +7,7 @@ class Within < MethodDecorator
 
   def call(orig, this, *args, &blk)
     Timeout::timeout(@seconds) do
+      p orig
       orig.call(*args, &blk)
     end
   end

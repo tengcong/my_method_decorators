@@ -1,6 +1,7 @@
 # require "method_decorators/version"
 
 module MethodDecorators
+  # when define a instance_method, Module#method_added will be called
   def method_added(name)
     super
 
@@ -12,6 +13,7 @@ module MethodDecorators
     decorators = MethodDecorator.current_decorators
     return  if decorators.empty?
 
+    # set visibility
     if    private_method_defined?(name);   visibility = :private
     elsif protected_method_defined?(name); visibility = :protected
     else                                   visibility = :public
@@ -22,6 +24,7 @@ module MethodDecorators
       decorated.call(*args, &blk)
     end
 
+    # set visibility
     case visibility
     when :protected; protected name
     when :private;   private name
@@ -41,7 +44,12 @@ module MethodDecorators
     end
   end
 
+  # this part merge all decorators together
+  # put all these together as a lambda
+  # lambda store all these method call, when call lambda, then invoke all
   def self.decorate_callable(orig, decorators)
+    p '0-' * 10
+    p decorators.first.class
     decorators.reduce(orig) do |callable, decorator|
       lambda{ |*a, &b| decorator.call(callable, orig.receiver, *a, &b) }
     end
@@ -62,7 +70,9 @@ class MethodDecorator
   @@current_decorators = []
 
   def self.current_decorators
+    p 'zxvsdfasdfasdfasdf'
     decs = @@current_decorators
+    p decs
     @@current_decorators = []
     decs
   end
@@ -72,6 +82,8 @@ class MethodDecorator
   end
 
   def +@
+    p '----===' * 10
+    p self
     @@current_decorators.unshift(self)
   end
 end

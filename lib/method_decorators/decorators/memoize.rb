@@ -1,5 +1,9 @@
 class Memoize < MethodDecorator
+  def initialize
+    p '----' * 18
+  end
   def call(orig, this, *args, &blk)
+    p 'i am memoize'
     return cache(this)[args] if cache(this).has_key?(args)
     cache(this)[args] = orig.call(*args, &blk)
   end

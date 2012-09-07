@@ -14,7 +14,12 @@ class Counter
       raise 'xzcvzxcv'
     end
   end
+
+  +Memoize
+  def method_a
+  end
 end
 
 c = Counter.new
-c.print_something
+# c.print_something
+c.method_a
